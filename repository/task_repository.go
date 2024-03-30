@@ -13,7 +13,7 @@ type ITaskRepository interface {
 	GetTaskById(task *model.Task, userId uint, taskId uint) error
 	CreateTask(task *model.Task) error
 	UpdateTask(task *model.Task, userId uint, taskId uint) error
-	DeleteTask(task *model.Task, taskId uint) error
+	DeleteTask(userId uint, taskId uint) error
 }
 
 type TaskRepository struct {
@@ -56,8 +56,8 @@ func (tr *TaskRepository) UpdateTask(task *model.Task, userId uint, taskId uint)
 	return nil
 }
 
-func (tr *TaskRepository) DeleteTask(task *model.Task, taskId uint) error {
-	result := tr.db.Where("id=? AND user_id=?", taskId, task.UserId).Delete(&model.Task{})
+func (tr *TaskRepository) DeleteTask(userId uint, taskId uint) error {
+	result := tr.db.Where("id=? AND user_id=?", taskId, userId).Delete(&model.Task{})
 	if result.Error != nil {
 		return result.Error
 	}

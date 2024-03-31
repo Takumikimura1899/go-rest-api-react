@@ -3,6 +3,7 @@ import useStore from '../store';
 import { useError } from './useError';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import type { Credential } from '../types';
 
 export const useMutateAuth = () => {
   const navigate = useNavigate();

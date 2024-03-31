@@ -3,6 +3,7 @@ package usecase
 import (
 	"go-rest-api/model"
 	"go-rest-api/repository"
+	"go-rest-api/validator"
 )
 
 type ITaskUsecase interface {
@@ -15,10 +16,11 @@ type ITaskUsecase interface {
 
 type TaskUsecase struct {
 	tr repository.ITaskRepository
+	tv validator.ITaskValidator
 }
 
-func NewTaskUsecase(tr repository.ITaskRepository) ITaskUsecase {
-	return &TaskUsecase{tr}
+func NewTaskUsecase(tr repository.ITaskRepository, tv validator.ITaskValidator) ITaskUsecase {
+	return &TaskUsecase{tr, tv}
 }
 
 func (tu *TaskUsecase) GetAllTasks(userId uint) ([]model.TaskResponse, error) {
@@ -54,6 +56,10 @@ func (tu *TaskUsecase) GetTaskById(uerId uint, taskId uint) (model.TaskResponse,
 }
 
 func (tu *TaskUsecase) CreateTask(task model.Task) (model.TaskResponse, error) {
+	if err := tu.tv.TaskValidate(task); err != nil {
+		return model.TaskResponse{}, err
+	}
+
 	if err := tu.tr.CreateTask(&task); err != nil {
 		return model.TaskResponse{}, err
 	}
@@ -67,6 +73,10 @@ func (tu *TaskUsecase) CreateTask(task model.Task) (model.TaskResponse, error) {
 }
 
 func (tu *TaskUsecase) UpdateTask(task model.Task, userId uint, taskId uint) (model.TaskResponse, error) {
+	if err := tu.tv.TaskValidate(task); err != nil {
+		return model.TaskResponse{}, err
+	}
+
 	if err := tu.tr.UpdateTask(&task, userId, taskId); err != nil {
 		return model.TaskResponse{}, err
 	}

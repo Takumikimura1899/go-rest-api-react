@@ -7,7 +7,7 @@ export const useQueryTasks = () => {
   const { switchErrorHandling } = useError();
   const getTasks = async () => {
     const { data } = await axios.get<Task[]>(
-      `${import.meta.env.VITE_REACT_APP_REST_URL}/tasks`,
+      `${import.meta.env.VITE_REACT_APP_API_URL}/tasks`,
       { withCredentials: true }
     );
     return data;

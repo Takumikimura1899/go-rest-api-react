@@ -11,10 +11,7 @@ export const useMutateTask = () => {
 
   const createTaskMutation = useMutation(
     (task: Omit<Task, 'id' | 'created_at' | 'updated_at'>) =>
-      axios.post<Task>(
-        `${import.meta.env.VITE_REACT_APP_REST_URL}/tasks`,
-        task
-      ),
+      axios.post<Task>(`${import.meta.env.VITE_REACT_APP_API_URL}/tasks`, task),
     {
       onSuccess: (res) => {
         const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
@@ -38,7 +35,7 @@ export const useMutateTask = () => {
   const updateTaskMutation = useMutation(
     (task: Omit<Task, 'created_at' | 'updated_at'>) =>
       axios.put<Task>(
-        `${import.meta.env.VITE_REACT_APP_REST_URL}/tasks/${task.id}`,
+        `${import.meta.env.VITE_REACT_APP_API_URL}/tasks/${task.id}`,
         { title: task.title }
       ),
     {
@@ -65,7 +62,7 @@ export const useMutateTask = () => {
   );
   const deleteTaskMutation = useMutation(
     (id: number) =>
-      axios.delete(`${import.meta.env.VITE_REACT_APP_REST_URL}/tasks/${id}`),
+      axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/tasks/${id}`),
     {
       onSuccess: (_, variables) => {
         const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
